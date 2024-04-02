@@ -1,0 +1,55 @@
+---
+- name: Provisioning servers
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install packed  on centos
+      yum:
+        name: "{{item}}"
+        state: present
+      when: ansible_distribution == "CentOS"
+      loop:
+        - chrony
+        - wget
+        - git
+        - zip
+        - unzip
+
+    - name: Install package  on ubuntu
+      apt:
+        name: "{{item}}"
+        state: present
+        update_cache: yes
+      when: ansible_distribution == "Ubuntu"
+      loop:
+        - ntp
+        - wget
+        - git
+        - zip
+        - unzip
+
+    - name: Start service on centos
+      service:
+        name: "{{item}}"
+        state: started
+        enabled: yes
+      when: ansible_distribution == "CentOS"
+      loop:
+        - chrony
+        - wget
+        - git
+        - zip
+        - unzip
+    - name: Start service on Ubuntu
+      service:
+        name: "{{item}}"
+        state: started
+        enabled: yes
+      when: ansible_distribution == "Ubuntu"
+      loop:
+        - ntp
+        - wget
+        - git
+        - zip
+        - unzip
+
